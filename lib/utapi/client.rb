@@ -17,17 +17,12 @@ module UTApi
 
     end
 
-    def do_request(action, verb=:get, payload=nil)
-
-      headers = {
-          'Content-Type' => 'application/json',
-          'X-HTTP-Method-Override' => verb.to_s.upcase,
-          'X-UT-PHISHING-TOKEN' => authorization.phishing_token,
-          'X-UT-SID' => authorization.sid
-      }
-      response = connection.post("#{authorization.server}/ut/game/fifa14/#{action}", payload, headers)
-
-      response.env[:body]
+    def login
+      authorization
+    rescue LoginError
+      false
+    else
+      true
     end
 
     def search(params)
@@ -102,6 +97,19 @@ module UTApi
     end
 
   private
+
+    def do_request(action, verb=:get, payload=nil)
+
+      headers = {
+          'Content-Type' => 'application/json',
+          'X-HTTP-Method-Override' => verb.to_s.upcase,
+          'X-UT-PHISHING-TOKEN' => authorization.phishing_token,
+          'X-UT-SID' => authorization.sid
+      }
+      response = connection.post("#{authorization.server}/ut/game/fifa14/#{action}", payload, headers)
+
+      response.env[:body]
+    end
 
     def authorization
       @authorization ||= LoginService.new(connection, @account).execute
