@@ -1,6 +1,7 @@
 # Provides the public interface for the api
 
 require 'utapi/exceptions'
+require 'utapi/connection'
 require 'utapi/login_service'
 require 'utapi/account'
 
