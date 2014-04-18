@@ -2,6 +2,7 @@
 
 require 'utapi/exceptions'
 require 'utapi/login_service'
+require 'utapi/account'
 
 module UTApi
   class Client
@@ -24,7 +25,7 @@ module UTApi
           'X-UT-PHISHING-TOKEN' => authorization.phishing_token,
           'X-UT-SID' => authorization.sid
       }
-      response = conn.post("#{authorization.server}/ut/game/fifa14/#{action}", payload, headers)
+      response = connection.post("#{authorization.server}/ut/game/fifa14/#{action}", payload, headers)
 
       response.env[:body]
     end
@@ -103,7 +104,11 @@ module UTApi
   private
 
     def authorization
-      @authorization ||= LoginService.new(@account).execute
+      @authorization ||= LoginService.new(connection, @account).execute
+    end
+
+    def connection
+      @connection ||= Connection.new
     end
 
   end
