@@ -1,5 +1,6 @@
 require 'utapi/authorization'
 require 'utapi/exceptions'
+require 'utapi/connection'
 
 # Returns a new instance of Authorization
 
@@ -9,9 +10,11 @@ require 'utapi/exceptions'
 module UTApi
   class LoginService
 
-    def initialize(connection, account)
-      @connection = connection
+    def initialize(account)
+      @connection = Connection.new
       @account = account
+
+      @connection.request_interval = 0
     end
 
 

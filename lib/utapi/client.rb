@@ -113,7 +113,7 @@ module UTApi
     end
 
     def authorization
-      @authorization ||= LoginService.new(connection, @account).execute
+      @authorization ||= LoginService.new(@account).execute
     end
 
     def connection
