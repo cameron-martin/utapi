@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "net-http-spy"
 
   spec.add_runtime_dependency 'faraday', '~> 0.9.0'
-  spec.add_runtime_dependency 'faraday_middleware'
+  spec.add_runtime_dependency 'faraday_middleware', '~> 0.9.0'
   spec.add_runtime_dependency 'faraday-cookie_jar'
   spec.add_runtime_dependency 'faraday-rate_limiter'
 
