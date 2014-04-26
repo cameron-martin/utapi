@@ -5,7 +5,7 @@ require 'utapi/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "utapi"
-  spec.version       = Utapi::VERSION
+  spec.version       = UTApi::VERSION
   spec.authors       = ["Cameron Martin"]
   spec.email         = ["cameronmartin123@gmail.com"]
   spec.description   = %q{TODO: Write a gem description}
