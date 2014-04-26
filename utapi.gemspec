@@ -29,4 +29,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'faraday-rate_limiter'
 
   spec.add_runtime_dependency 'net-http-persistent'
+  spec.add_runtime_dependency 'rattributes'
 end
