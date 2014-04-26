@@ -4,7 +4,6 @@ require 'utapi/connection'
 
 # Returns a new instance of Authorization
 
-# REVIEW: Since cookies are not used for api authorization, should this just create and use it's own connection?
 # TODO: Make the do_* functions less reliant on instance variables, and pass them in as parameters instead.
 
 module UTApi
@@ -21,10 +20,10 @@ module UTApi
     def execute
       @nucleus_user_id = do_initial_login
       do_futweb_cookie_stage
-      @server = do_shard_stage
-      do_account_info_stage
+      @server = get_server
+      @persona_id, @persona_name = get_account_info
       do_auth_stage
-      do_validate_stage
+      @phishing_token = get_phishing_token
 
       Authorization.new(server: @server, phishing_token: @phishing_token, sid: @sid)
     end
@@ -73,7 +72,7 @@ module UTApi
       })
     end
 
-    def do_shard_stage
+    def get_server
       require_instance_variables :nucleus_user_id
 
       shards = @connection.get('http://www.easports.com/iframe/fut/p/ut/shards', {}, generate_headers(:nuc, :route))
@@ -87,7 +86,7 @@ module UTApi
       "#{shard['clientProtocol']}://#{shard['clientFacingIpPort']}"
     end
 
-    def do_account_info_stage
+    def get_account_info
       require_instance_variables :server, :nucleus_user_id
 
       account_info = @connection.get('http://www.easports.com/iframe/fut/p/ut/game/fifa14/user/accountinfo', {}, generate_headers(:nuc, :route))
@@ -96,8 +95,8 @@ module UTApi
 
       persona = account_info.env[:body]['userAccountInfo']['personas'][0]
 
-      @persona_id = persona['personaId']
-      @persona_name = persona['personaName']
+      # TODO: Extract a AccountInfo value object for these
+      [persona['personaId'], persona['personaName']]
 
     end
 
@@ -126,15 +125,14 @@ module UTApi
 
     end
 
-    def do_validate_stage
+    def get_phishing_token
 
       payload = { answer: @account.hash }
 
       response = @connection.post('http://www.easports.com/iframe/fut/p/ut/game/fifa14/phishing/validate', payload, generate_headers(:nuc, :route, :sid))
 
       # This must be parsed manually, because the content-type sent isn't right!
-
-      @phishing_token = JSON.parse(response.env[:body])['token']
+      JSON.parse(response.env[:body])['token']
 
     end
 
