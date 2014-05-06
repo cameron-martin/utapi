@@ -13,9 +13,7 @@ module UTApi
     end
 
     def initialize(email, password, hash, platform)
-
       @account = Account.new(email: email, password: password, hash: hash, platform: platform)
-
     end
 
     def login

@@ -1,4 +1,5 @@
 require 'utapi/authorization'
+require 'utapi/persona'
 require 'utapi/exceptions'
 require 'utapi/connection'
 
@@ -10,9 +11,9 @@ module UTApi
   class LoginService
 
     def initialize(account)
-      @connection = Connection.new
       @account = account
 
+      @connection = Connection.new
       @connection.request_interval = 0
     end
 
@@ -21,8 +22,8 @@ module UTApi
       @nucleus_user_id = do_initial_login
       do_futweb_cookie_stage
       @server = get_server
-      @persona_id, @persona_name = get_account_info
-      do_auth_stage
+      @persona = get_account_info
+      @sid = get_sid
       @phishing_token = get_phishing_token
 
       Authorization.new(server: @server, phishing_token: @phishing_token, sid: @sid)
@@ -73,6 +74,7 @@ module UTApi
     end
 
     def get_server
+      # REVIEW: Do we need to send the route here?
       require_instance_variables :nucleus_user_id
 
       shards = @connection.get('http://www.easports.com/iframe/fut/p/ut/shards', {}, generate_headers(:nuc, :route))
@@ -95,22 +97,20 @@ module UTApi
 
       persona = account_info.env[:body]['userAccountInfo']['personas'][0]
 
-      # TODO: Extract a AccountInfo value object for these
-      [persona['personaId'], persona['personaName']]
-
+      Persona.new(persona_id: persona['personaId'], persona_name: persona['personaName'])
     end
 
-    def do_auth_stage
-      require_instance_variables :persona_id, :nucleus_user_id, :server, :persona_name
+    def get_sid
+      require_instance_variables :persona, :nucleus_user_id, :server
 
       payload = {
           isReadOnly: false,
           sku: 'FUT14WEB',
           clientVersion: 1,
           nuc: @nucleus_user_id,
-          nucleusPersonaId: @persona_id,
-          nucleusPersonaDisplayName: @persona_name,
-          #nucleusPersonaPlatform: 'ps3', # 360 or ps3 TODO: WHERE DO THESE COME FROM??!! and is it needed?
+          nucleusPersonaId: @persona.persona_id,
+          nucleusPersonaDisplayName: @persona.persona_name,
+          #nucleusPersonaPlatform: 'ps3', # 360 or ps3 REVIEW: Where do these come from? and is it needed?
           locale: 'en-GB',
           method: 'authcode',
           priorityLevel: 4,
@@ -121,7 +121,7 @@ module UTApi
 
       auth = @connection.post('http://www.easports.com/iframe/fut/p/ut/auth', payload, headers)
 
-      @sid = auth.env[:body]['sid']
+      auth.env[:body]['sid']
 
     end
 
