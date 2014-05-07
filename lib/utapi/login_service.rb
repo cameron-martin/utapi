@@ -105,8 +105,10 @@ module UTApi
 
       payload = {
           isReadOnly: false,
-          sku: 'FUT14WEB',
-          clientVersion: 1,
+          sku: 'FUT14IOS',
+          clientVersion: 8,
+          #sku: 'FUT14WEB',
+          #clientVersion: 1,
           nuc: @nucleus_user_id,
           nucleusPersonaId: @persona.persona_id,
           nucleusPersonaDisplayName: @persona.persona_name,
