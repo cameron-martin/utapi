@@ -21,7 +21,7 @@ module Faraday
 
     def handle_return_errors(env)
       case env[:status]
-        when 302, 200
+        when 302, 200, 461
           # Let them pass through
         when 401
           raise UTApi::NotLoggedInError, response_values(env)
