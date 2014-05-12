@@ -37,7 +37,7 @@ module UTApi
       @connection ||= Faraday.new(ssl: {verify: false}, request: {timeout: 20, open_timeout: 20}, headers: { 'User-Agent' => @user_agent }) do |faraday|
         faraday.response :follow_redirects, limit: 5
         #faraday.response :raise_error # This catches generic http errors
-        #faraday.request :retry, exceptions: [UTApi::ConnectionError, UTApi::ServerError], interval: 1, backoff_factor: 2, max: 3
+        faraday.request :retry, exceptions: [UTApi::ConnectionError, UTApi::ServerError], interval: 1, backoff_factor: 2, max: 3
         faraday.use :error_handler # This is custom error handling
         faraday.use :cookie_jar, jar: cookie_jar
         faraday.request :url_encoded
