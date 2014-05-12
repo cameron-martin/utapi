@@ -91,6 +91,11 @@ module UTApi
       do_request("trade/#{trade_id}", :delete)
     end
 
+    def delete_from_watch_list(*trade_ids)
+      action = 'watchlist?' + self.class.encode_query_string(tradeId: trade_ids.join(','))
+      do_request(action, :delete)
+    end
+
     def get_credits
       do_request('user/credits')['credits']
     end
