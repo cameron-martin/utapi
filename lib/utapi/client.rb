@@ -45,11 +45,8 @@ module UTApi
     end
 
     def bid(trade_id, value)
-
-      do_request("trade/#{trade_id}/bid", :put, {bid: value}).tap do |response|
-        raise ApiCallFailed, "Cannot bid, response: #{response}" unless response.is_a?(Hash) and response.has_key?('auctionInfo')
-      end
-
+      response = do_request("trade/#{trade_id}/bid", :put, {bid: value})
+      response.is_a?(Hash) and response.has_key?('auctionInfo')
     end
 
 
