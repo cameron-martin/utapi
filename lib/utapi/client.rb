@@ -52,26 +52,25 @@ module UTApi
 
     def list_item(item_id, start_price, bin_price, duration)
 
-      do_request('auctionhouse', :post, {
+      response = do_request('auctionhouse', :post, {
           startingBid: start_price,
           duration: duration,
           itemData: {
               id: item_id
           },
           buyNowPrice: bin_price
-      }).tap do |response|
-        raise ApiCallFailed, "Cannot list item: #{response}" unless response.is_a?(Hash) and response.has_key?('id')
-      end
+      })
+
+      response.is_a?(Hash) and response.has_key?('id')
     end
 
     def move_card(item_id, pile)
 
-      do_request('item', :put, {
+      response = do_request('item', :put, {
           itemData: [{ id: item_id, pile: pile }]
-      }).tap do |response|
-        raise ApiCallFailed, "Cannot move card: #{response}" unless response.is_a?(Hash) and response.has_key?('itemData') and response['itemData'][0]['success']
-      end
+      })
 
+      response.is_a?(Hash) and response.has_key?('itemData') and response['itemData'][0]['success']
     end
 
     def trade_pile
