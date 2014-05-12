@@ -83,6 +83,10 @@ module UTApi
       end
     end
 
+    def watch_list
+      do_request('watchlist', :get)
+    end
+
     def unassigned_items
       do_request('purchased/items', :get)
     end
