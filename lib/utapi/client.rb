@@ -17,7 +17,7 @@ module UTApi
     end
 
     def login
-      authorization
+      @authorization = generate_authorization
     rescue LoginError
       false
     else
@@ -110,13 +110,30 @@ module UTApi
           'X-UT-PHISHING-TOKEN' => authorization.phishing_token,
           'X-UT-SID' => authorization.sid
       }
-      response = connection.post("#{authorization.server}/ut/game/fifa14/#{action}", payload, headers)
+
+      retried = false
+      begin
+        response = connection.post("#{authorization.server}/ut/game/fifa14/#{action}", payload, headers)
+      rescue NotLoggedInError
+        if !retried && login
+          retried = true
+          retry
+        else
+          raise
+        end
+      end
 
       response.env[:body]
     end
 
+    # REVIEW: LoginError can leak out if login is not explicitly called
+
     def authorization
-      @authorization ||= LoginService.new(@account).execute
+      @authorization ||= generate_authorization
+    end
+
+    def generate_authorization
+      LoginService.new(@account).execute
     end
 
     def connection
