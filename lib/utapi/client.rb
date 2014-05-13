@@ -104,15 +104,17 @@ module UTApi
 
     def do_request(action, verb=:get, payload=nil)
 
-      headers = {
-          'Content-Type' => 'application/json',
-          'X-HTTP-Method-Override' => verb.to_s.upcase,
-          'X-UT-PHISHING-TOKEN' => authorization.phishing_token,
-          'X-UT-SID' => authorization.sid
-      }
-
       retried = false
+
       begin
+
+        headers = {
+            'Content-Type' => 'application/json',
+            'X-HTTP-Method-Override' => verb.to_s.upcase,
+            'X-UT-PHISHING-TOKEN' => authorization.phishing_token,
+            'X-UT-SID' => authorization.sid
+        }
+
         response = connection.post("#{authorization.server}/ut/game/fifa14/#{action}", payload, headers)
       rescue NotLoggedInError
         if !retried && login
