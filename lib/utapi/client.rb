@@ -8,6 +8,8 @@ require 'utapi/account'
 module UTApi
   class Client
 
+    attr_reader :logged_in
+
     def self.encode_query_string(query_hash)
       query_hash.map { |key, value| "#{CGI::escape(key.to_s)}=#{CGI::escape(value.to_s)}" }.join('&')
     end
