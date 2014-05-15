@@ -100,7 +100,7 @@ module UTApi
     end
 
     def get_credits
-      do_request('user/credits')['credits']
+      do_request('user/credits')
     end
 
   private
