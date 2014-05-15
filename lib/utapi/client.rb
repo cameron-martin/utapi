@@ -14,6 +14,7 @@ module UTApi
 
     def initialize(email, password, hash, platform)
       @account = Account.new(email: email, password: password, hash: hash, platform: platform)
+      @logged_in = false
     end
 
     def login
@@ -117,6 +118,7 @@ module UTApi
 
         response = connection.post("#{authorization.server}/ut/game/fifa14/#{action}", payload, headers)
       rescue NotLoggedInError
+        @logged_in = false
         if !retried && login
           retried = true
           retry
@@ -135,7 +137,9 @@ module UTApi
     end
 
     def generate_authorization
-      LoginService.new(@account).execute
+      LoginService.new(@account).execute.tap do |*|
+        @logged_in = true
+      end
     end
 
     def connection
