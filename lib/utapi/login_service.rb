@@ -5,8 +5,7 @@ require 'utapi/connection'
 
 # Returns a new instance of Authorization
 
-# TODO: Make the do_* functions less reliant on instance variables, and pass them in as parameters instead.
-
+# TODO: Do something with this, its a bit messy.
 module UTApi
   class LoginService
 
