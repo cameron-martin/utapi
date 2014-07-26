@@ -16,5 +16,5 @@ test/tmp
 test/version_tmp
 tmp
 
-spec/cassettes/login.yml
+spec/cassettes/*
 .env
