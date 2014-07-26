@@ -4,12 +4,7 @@ require 'utapi/login_service'
 require 'utapi/connection'
 require 'utapi/account'
 
-#require 'net-http-spy'
-#
-#Net::HTTP.http_logger = Logger.new(File.expand_path("../tmp/logs/login-#{Time.now}.log", File.dirname(__FILE__)))
-#Net::HTTP.http_logger_options = { verbose: true }
-
-describe UTApi::LoginService, vcr: { cassette_name: 'login' } do
+describe UTApi::LoginService, vcr: { cassette_name: 'requests' } do
 
   let(:account) do
     UTApi::Account.new(
