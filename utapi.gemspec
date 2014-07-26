@@ -4,14 +4,14 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'utapi/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "utapi"
+  spec.name          = 'utapi'
   spec.version       = UTApi::VERSION
-  spec.authors       = ["Cameron Martin"]
-  spec.email         = ["cameronmartin123@gmail.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
-  spec.homepage      = ""
-  spec.license       = "MIT"
+  spec.authors       = ['Cameron Martin']
+  spec.email         = ['cameronmartin123@gmail.com']
+  spec.description   = %q{FIFA 14 Ultimate Team api in Ruby}
+  spec.summary       = spec.description
+  spec.homepage      = 'https://github.com/cameron-martin/utapi'
+  spec.license       = 'MIT'
 
   spec.files         = `git ls-files`.split($/)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
